@@ -29,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.kairos.Kairos;
 import com.kairos.KairosListener;
 
@@ -36,6 +37,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 public class FoundActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -54,6 +56,8 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
     private static String mFileName = null;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    ArrayList<String> lostClothes;
+    ArrayList<String> doubtful;
 
 
 
@@ -71,15 +75,19 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_found);
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
+
+        lostClothes = new ArrayList<>();
+        doubtful = new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("lost");
 
         Firebase.setAndroidContext(this);
 
         progressDialog = new ProgressDialog(this);
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-        builder.detectFileUriExposure();
+
 
         myKairos = new Kairos();
 
@@ -96,9 +104,16 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
                 // your code here!
                 Log.d("KAIROS DEMO", response);
 
+                if (response.equals("{\"Errors\":[{\"Message\":\"no faces found in the image\",\"ErrCode\":5002}]}"))
+                {
+                    checkElse();
+                }
+
 
 
                 progressDialog.dismiss();
+
+
 
                 databaseReference.addChildEventListener(new ChildEventListener() {
                     @Override
@@ -144,8 +159,9 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFail(String response) {
                 // your code here!
+                Log.d(TAG, "onFail: ");
                 Log.d("KAIROS DEMO", response);
-
+                checkElse();
             }
         };
 
@@ -168,6 +184,52 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
         btnStop.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
         imageView.setVisibility(View.GONE);
+    }
+
+    private void checkElse() {
+        String a = etClothes.getText().toString();
+        Log.d(TAG, "checkElse: ");
+        doubtful.clear();
+        int c=0;
+        for (int i=0;i<lostClothes.size();++i){
+            String[] splited = a.split("\\s+");
+            for (int j=0;j<splited.length;++j){
+                if (lostClothes.get(i).contains(splited[j])){
+                    c++;
+                }
+                if (c>splited.length/2){
+                    doubtful.add(lostClothes.get(i));
+                }
+            }
+        }
+        if (doubtful.size()>0){
+            for (int k=0;k<doubtful.size();++k){
+                Log.d(TAG, "checkElse: "+doubtful.get(k));
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                lostClothes.clear();
+                for(DataSnapshot lostDataSnapshot : dataSnapshot.getChildren()){
+                    Lost lostguy = lostDataSnapshot.getValue(Lost.class);
+                    Log.d(TAG, "onDataChange: "+lostguy.getLostClothes());
+                    lostClothes.add(lostguy.getLostClothes());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

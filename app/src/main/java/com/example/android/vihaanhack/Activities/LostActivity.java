@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -38,7 +37,6 @@ import com.kairos.KairosListener;
 
 import org.json.JSONException;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
@@ -60,7 +58,7 @@ public class LostActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
-    Uri photoKaUri;
+    Uri photoKaUri = Uri.parse("http://www.google.com");
 
     SharedPreferences sharedpreferences;
     public static final String MyPREFERENCES = "MyPrefs" ;
@@ -234,12 +232,12 @@ public class LostActivity extends AppCompatActivity {
     private void takeFromCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        Long tsLong = System.currentTimeMillis()/1000;
-        String ts = tsLong.toString();
-
-        File f = new File(Environment.getExternalStorageDirectory(), "Lost"+ts+".jpg");
-        photoKaUri = Uri.fromFile(f);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoKaUri);
+//        Long tsLong = System.currentTimeMillis()/1000;
+//        String ts = tsLong.toString();
+//
+//        File f = new File(Environment.getExternalStorageDirectory(), "Lost"+ts+".jpg");
+//        photoKaUri = Uri.fromFile(f);
+//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoKaUri);
 
         startActivityForResult(cameraIntent, REQUEST_CAMERA);
     }
@@ -257,7 +255,7 @@ public class LostActivity extends AppCompatActivity {
 //            image.setImageURI(photoKaUri);
             image.setVisibility(View.VISIBLE);
 //            photoKaUri = intent.getData();
-            Log.d("checkkk", "onActivityResult: " + photoKaUri.toString());
+//            Log.d("checkkk", "onActivityResult: " + photoKaUri.toString());
 
 
 
