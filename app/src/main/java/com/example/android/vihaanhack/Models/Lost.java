@@ -7,13 +7,13 @@ package com.example.android.vihaanhack.Models;
 public class Lost {
 
     String lostName;
-    Integer lostAge;
+    String lostAge;
     String lostClothes;
     String lostImage;
 
     public Lost() {}
 
-    public Lost(String lostName, Integer lostAge, String lostClothes, String lostImage) {
+    public Lost(String lostName, String lostAge, String lostClothes, String lostImage) {
         this.lostName = lostName;
         this.lostAge = lostAge;
         this.lostClothes = lostClothes;
@@ -24,8 +24,24 @@ public class Lost {
         return lostName;
     }
 
-    public Integer getLostAge() {
+    public void setLostName(String lostName) {
+        this.lostName = lostName;
+    }
+
+    public String getLostAge() {
         return lostAge;
+    }
+
+    public void setLostAge(String lostAge) {
+        this.lostAge = lostAge;
+    }
+
+    public void setLostClothes(String lostClothes) {
+        this.lostClothes = lostClothes;
+    }
+
+    public void setLostImage(String lostImage) {
+        this.lostImage = lostImage;
     }
 
     public String getLostClothes() {

@@ -20,7 +20,9 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:textStyle="bold"
-            android:id="@+id/lost"/>
+            android:id="@+id/lost"
+            android:clickable="false"
+            />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +31,8 @@
             android:textColor="@android:color/white"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:id="@+id/found"/>
+            android:id="@+id/found"
+            android:clickable="false"/>
     </LinearLayout>
 
 

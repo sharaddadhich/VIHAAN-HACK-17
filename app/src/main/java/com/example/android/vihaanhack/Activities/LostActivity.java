@@ -1,6 +1,7 @@
 package com.example.android.vihaanhack.Activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,8 +26,13 @@ import android.widget.Toast;
 import com.example.android.vihaanhack.Models.Lost;
 import com.example.android.vihaanhack.R;
 import com.firebase.client.Firebase;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+
 
 import java.io.File;
 import java.util.Random;
@@ -39,7 +45,10 @@ public class LostActivity extends AppCompatActivity {
     Button btnSubmit;
 
     Firebase firebaseRef;
+    FirebaseStorage firebaseStorage;
     StorageReference storageReference;
+
+    ProgressDialog progressDialog;
 
     Uri photoKaUri;
 
@@ -62,7 +71,10 @@ public class LostActivity extends AppCompatActivity {
         lostClothes = (EditText) findViewById(R.id.lostClothes);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
-        storageReference = FirebaseStorage.getInstance().getReference();
+        progressDialog = new ProgressDialog(this);
+
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference().child("LOST");
 
         final CharSequence cameraOptions[] = new CharSequence[]{"Camera", "Gallery"};
 
@@ -99,17 +111,42 @@ public class LostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isValid()) {
 
-                    Lost lostt = new Lost(lostName.getText().toString(), Integer.parseInt(lostAge.getText().toString()), lostClothes.getText().toString(), null);
+                    progressDialog.setMessage("Uploading");
+                    progressDialog.show();
 
-                    firebaseRef = new Firebase("https://vihaanhack.firebaseio.com/lost");
-                    firebaseRef.child(getSaltString()).setValue(lostt);
+                    StorageReference photoref = storageReference.child(String.valueOf(photoKaUri));
+                    Log.d("234234", "onClick: " + photoKaUri);
+                    photoref.putFile(photoKaUri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
 
-                    lostName.setText("");
-                    lostAge.setText("");
-                    lostClothes.setText("");
-                    image.setVisibility(View.GONE);
+                            Uri downloadUri = taskSnapshot.getDownloadUrl();
 
-                    Toast.makeText(LostActivity.this, "Submitted", Toast.LENGTH_SHORT).show();
+                            Lost lostt = new Lost(lostName.getText().toString(),lostAge.getText().toString(),lostClothes.getText().toString(),downloadUri.toString());
+                            firebaseRef = new Firebase("https://vihaanhack.firebaseio.com/lost");
+                            firebaseRef.child(getSaltString()).setValue(lostt);
+                            lostName.setText("");
+                            lostAge.setText("");
+                            lostClothes.setText("");
+                            image.setVisibility(View.GONE);
+
+
+                            Toast.makeText(LostActivity.this, "Submitted", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progressDialog.dismiss();
+                                    Log.d("123123", "onFailure: ERRORRRRRRRRRR");
+                                    e.printStackTrace();
+                                }
+                            });
+
+
+
                 }
             }
         });
@@ -147,7 +184,10 @@ public class LostActivity extends AppCompatActivity {
     private void takeFromCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        File f = new File(Environment.getExternalStorageDirectory(), "ProjectImage.jpg");
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+
+        File f = new File(Environment.getExternalStorageDirectory(), "Lost"+ts+".jpg");
         photoKaUri = Uri.fromFile(f);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoKaUri);
 
@@ -168,6 +208,10 @@ public class LostActivity extends AppCompatActivity {
             image.setVisibility(View.VISIBLE);
 //            photoKaUri = intent.getData();
             Log.d("checkkk", "onActivityResult: " + photoKaUri.toString());
+
+
+
+
 
         }
 
