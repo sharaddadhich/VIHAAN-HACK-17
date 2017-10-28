@@ -1,89 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/coordinatorLayout">
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        tools:context="com.example.android.vihaanhack.Activities.FoundActivity">
-
-
-    <FrameLayout
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_gravity="center">
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/icamera"
-            android:layout_gravity="center"
-            android:id="@+id/placeholder"/>
-
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/image"/>
-
-    </FrameLayout>
-
-
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Audio"
-                android:layout_gravity="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:textColor="@android:color/black"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(Optional) :"
-                android:layout_gravity="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            tools:context="com.example.android.vihaanhack.Activities.FoundActivity">
 
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_gravity="center"
-                android:src="@drawable/mic"/>
 
-        </LinearLayout>
+            <FrameLayout
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/placeholder"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/icamera" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Description :"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:src="@mipmap/ic_launcher" />
 
-            <EditText
+            </FrameLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Add a Description"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Audio"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="(Optional) :"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/record"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/mic" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/stop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/stop" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/clothes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Clothes" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Add a Description :" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:text="SUBMIT"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
+    </ScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
 
 
 
 
-    </LinearLayout>
 
 
 
