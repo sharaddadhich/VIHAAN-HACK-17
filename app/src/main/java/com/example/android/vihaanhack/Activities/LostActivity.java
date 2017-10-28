@@ -12,18 +12,30 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.vihaanhack.Models.Lost;
 import com.example.android.vihaanhack.R;
+import com.firebase.client.Firebase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.Random;
 
 public class LostActivity extends AppCompatActivity {
 
     ImageView placeholder, image;
     EditText lostName, lostAge, lostClothes;
     Bitmap picture;
+    Button btnSubmit;
+
+    Firebase firebaseRef;
+    StorageReference storageReference;
 
     public static final Integer REQUEST_CAMERA = 10001;
     public static final Integer CAMERA_REQ_CODE = 1001;
@@ -35,11 +47,16 @@ public class LostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lost);
 
+        Firebase.setAndroidContext(this);
+
         placeholder = (ImageView) findViewById(R.id.placeholder);
         image = (ImageView) findViewById(R.id.imagee);
         lostName = (EditText) findViewById(R.id.lostName);
         lostAge = (EditText) findViewById(R.id.lostAge);
         lostClothes = (EditText) findViewById(R.id.lostClothes);
+        btnSubmit = (Button) findViewById(R.id.btnSubmit);
+
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         final CharSequence cameraOptions[] = new CharSequence[]{"Camera", "Gallery"};
 
@@ -70,6 +87,55 @@ public class LostActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isValid()) {
+
+                    Lost lostt = new Lost(lostName.getText().toString(), Integer.parseInt(lostAge.getText().toString()), lostClothes.getText().toString(), null);
+
+                    firebaseRef = new Firebase("https://vihaanhack.firebaseio.com/lost");
+                    firebaseRef.child(getSaltString()).setValue(lostt);
+
+                    lostName.setText("");
+                    lostAge.setText("");
+                    lostClothes.setText("");
+                    image.setVisibility(View.GONE);
+
+                    Toast.makeText(LostActivity.this, "Submitted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    protected String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZqwertyuiopasdfghjklzxcvbnm1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 10) {
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
+    }
+
+    private Boolean isValid() {
+        if (TextUtils.isEmpty(lostName.getText().toString())) {
+            Toast.makeText(this, "Enter Name", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(lostAge.getText().toString())) {
+            Toast.makeText(this, "Enter Age", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(lostClothes.getText().toString())) {
+            Toast.makeText(this, "Enter Clothes Description", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void takeFromCamera() {
@@ -80,22 +146,21 @@ public class LostActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resuleCode, Intent intent) {
 
-        if (requestCode == INTENT_REQUEST_GET_IMAGES && resuleCode == RESULT_OK) {
+        if (resuleCode != RESULT_OK) return;
 
+        if (requestCode == REQUEST_CAMERA && resuleCode == RESULT_OK) {
             picture = (Bitmap) intent.getExtras().get("data");
             image.setImageBitmap(picture);
             image.setVisibility(View.VISIBLE);
-
-            if (resuleCode != RESULT_OK) return;
-
-            if (requestCode == REQUEST_CAMERA && resuleCode == RESULT_OK) {
-                picture = (Bitmap) intent.getExtras().get("data");
-                image.setImageBitmap(picture);
-                image.setVisibility(View.VISIBLE);
-            }
-
-            super.onActivityResult(requestCode, resuleCode, intent);
         }
+
+        if (requestCode == INTENT_REQUEST_GET_IMAGES && resuleCode == RESULT_OK) {
+            picture = (Bitmap) intent.getExtras().get("data");
+            image.setImageBitmap(picture);
+            image.setVisibility(View.VISIBLE);
+        }
+
+        super.onActivityResult(requestCode, resuleCode, intent);
     }
 
     @Override

@@ -20,8 +20,8 @@
         android:orientation="vertical">
 
     <FrameLayout
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_gravity="center">
 
         <ImageView
@@ -85,6 +85,17 @@
                 android:inputType="textEmailAddress"
                 android:textColorHint="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="#7cb342"
+            android:textColor="#fff"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:id="@+id/btnSubmit" />
 
     </LinearLayout>
 
