@@ -94,6 +94,7 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
             public void onFail(String response) {
                 // your code here!
                 Log.d("KAIROS DEMO", response);
+
             }
         };
 

@@ -10,14 +10,16 @@ public class Lost {
     String lostAge;
     String lostClothes;
     String lostImage;
+    String lostMob;
 
     public Lost() {}
 
-    public Lost(String lostName, String lostAge, String lostClothes, String lostImage) {
+    public Lost(String lostName, String lostAge, String lostClothes, String lostImage, String lostMob) {
         this.lostName = lostName;
         this.lostAge = lostAge;
         this.lostClothes = lostClothes;
         this.lostImage = lostImage;
+        this.lostMob = lostMob;
     }
 
     public String getLostName() {
@@ -50,5 +52,9 @@ public class Lost {
 
     public String getLostImage() {
         return lostImage;
+    }
+
+    public String getLostMob() {
+        return lostMob;
     }
 }

@@ -2,8 +2,10 @@ package com.example.android.vihaanhack.Activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -43,7 +45,7 @@ import java.util.Random;
 public class LostActivity extends AppCompatActivity {
 
     ImageView placeholder, image;
-    EditText lostName, lostAge, lostClothes;
+    EditText lostName, lostAge, lostClothes, lostMob;
     Bitmap picture;
     Button btnSubmit;
 
@@ -60,6 +62,9 @@ public class LostActivity extends AppCompatActivity {
 
     Uri photoKaUri;
 
+    SharedPreferences sharedpreferences;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+
     public static final Integer REQUEST_CAMERA = 10001;
     public static final Integer CAMERA_REQ_CODE = 1001;
     public static final Integer INTENT_REQUEST_GET_IMAGES = 101;
@@ -72,11 +77,14 @@ public class LostActivity extends AppCompatActivity {
 
         Firebase.setAndroidContext(this);
 
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
         placeholder = (ImageView) findViewById(R.id.placeholder);
         image = (ImageView) findViewById(R.id.imagee);
         lostName = (EditText) findViewById(R.id.lostName);
         lostAge = (EditText) findViewById(R.id.lostAge);
         lostClothes = (EditText) findViewById(R.id.lostClothes);
+        lostMob = (EditText) findViewById(R.id.lostMob);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
         progressDialog = new ProgressDialog(this);
@@ -158,7 +166,11 @@ public class LostActivity extends AppCompatActivity {
 
                             Uri downloadUri = taskSnapshot.getDownloadUrl();
 
-                            Lost lostt = new Lost(lostName.getText().toString(),lostAge.getText().toString(),lostClothes.getText().toString(),downloadUri.toString());
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString("mobNo", lostMob.getText().toString());
+                            editor.commit();
+
+                            Lost lostt = new Lost(lostName.getText().toString(),lostAge.getText().toString(),lostClothes.getText().toString(),downloadUri.toString(), lostMob.getText().toString());
                             firebaseRef = new Firebase("https://vihaanhack.firebaseio.com/lost");
                             firebaseRef.child(getSaltString()).setValue(lostt);
                             lostName.setText("");
@@ -210,6 +222,10 @@ public class LostActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(lostClothes.getText().toString())) {
             Toast.makeText(this, "Enter Clothes Description", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(lostMob.getText().toString())) {
+            Toast.makeText(this, "Enter Mobile Number", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
