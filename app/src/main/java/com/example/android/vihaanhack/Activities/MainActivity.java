@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.android.vihaanhack.Interfaces.OnGetLocation;
 import com.example.android.vihaanhack.R;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnLost;
     Button btnFound;
 
+    TextView tvTheme;
     FirebaseAuth firebaseAuth;
 
     public static GPSTracker gps;
@@ -37,6 +39,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         btnLost = (Button) findViewById(R.id.lost);
         btnFound = (Button) findViewById(R.id.found);
+        tvTheme = (TextView) findViewById(R.id.moto);
+
+
+//        Typeface typeFace = Typeface.createFromAsset(getAssets(),"fonts/font2.ttf");
+//        tvTheme.setTypeface(typeFace);
 
         progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setMessage("Fetching Location...");

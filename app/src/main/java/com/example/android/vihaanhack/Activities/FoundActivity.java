@@ -9,9 +9,7 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
-import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.android.vihaanhack.Models.Lost;
 import com.example.android.vihaanhack.R;
@@ -36,9 +33,7 @@ import com.kairos.Kairos;
 import com.kairos.KairosListener;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -149,6 +144,7 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
             public void onFail(String response) {
                 // your code here!
                 Log.d("KAIROS DEMO", response);
+
             }
         };
 

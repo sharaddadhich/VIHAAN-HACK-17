@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+
 
     <application
         android:allowBackup="true"
@@ -22,12 +24,14 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD8GI_xAVxd78z7TnP6dQ8BgzuhkYlrz2E" />
+
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".Activities.FoundActivity"
@@ -35,14 +39,34 @@
         <activity
             android:name=".Activities.LostActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+
+        <activity android:name=".Activities.SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".Activities.MapActivity"></activity>
 
-        <receiver android:name=".MessageRecieverBroadcast">
+        <receiver android:name=".MessageRecieverBroadcast"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.READ_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".IncomingSms"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+        <intent-filter>
+            <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+        </intent-filter>
+        </receiver>
     </application>
 
 
