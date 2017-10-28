@@ -231,14 +231,7 @@ public class LostActivity extends AppCompatActivity {
 
     private void takeFromCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-//        Long tsLong = System.currentTimeMillis()/1000;
-//        String ts = tsLong.toString();
-//
-//        File f = new File(Environment.getExternalStorageDirectory(), "Lost"+ts+".jpg");
-//        photoKaUri = Uri.fromFile(f);
-//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoKaUri);
-
+        
         startActivityForResult(cameraIntent, REQUEST_CAMERA);
     }
 
