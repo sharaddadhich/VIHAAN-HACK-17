@@ -4,30 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context="com.example.android.vihaanhack.Activities.MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerInParent="true">
+        android:text="Apno Ki Khoj Mein Aap Ke Sahaayak"
+        android:textSize="60sp"
+        android:gravity="center"
+        android:fontFamily="sans-serif"
+        android:textStyle="italic"
+        android:layout_centerInParent="true"
+        android:textColor="#2e7d32"
+        android:id="@+id/moto"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LOST"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/btn_background"
             android:textColor="@android:color/white"
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:textStyle="bold"
+            android:layout_marginRight="20dp"
+            android:padding="10dp"
             android:id="@+id/lost"
-            android:clickable="false"
-            />
+            android:clickable="false" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="FOUND"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/btn_background"
             android:textColor="@android:color/white"
             android:layout_gravity="center"
             android:textStyle="bold"
