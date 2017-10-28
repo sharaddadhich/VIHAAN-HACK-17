@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +28,7 @@ import com.firebase.client.Firebase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.Random;
 
 public class LostActivity extends AppCompatActivity {
@@ -36,6 +40,8 @@ public class LostActivity extends AppCompatActivity {
 
     Firebase firebaseRef;
     StorageReference storageReference;
+
+    Uri photoKaUri;
 
     public static final Integer REQUEST_CAMERA = 10001;
     public static final Integer CAMERA_REQ_CODE = 1001;
@@ -140,6 +146,11 @@ public class LostActivity extends AppCompatActivity {
 
     private void takeFromCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        File f = new File(Environment.getExternalStorageDirectory(), "ProjectImage.jpg");
+        photoKaUri = Uri.fromFile(f);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoKaUri);
+
         startActivityForResult(cameraIntent, REQUEST_CAMERA);
     }
 
@@ -149,9 +160,15 @@ public class LostActivity extends AppCompatActivity {
         if (resuleCode != RESULT_OK) return;
 
         if (requestCode == REQUEST_CAMERA && resuleCode == RESULT_OK) {
-            picture = (Bitmap) intent.getExtras().get("data");
-            image.setImageBitmap(picture);
+//            picture = (Bitmap) intent.getExtras().get("data");
+//            image.setImageBitmap(picture);
+//            image.setVisibility(View.VISIBLE);
+
+            image.setImageURI(photoKaUri);
             image.setVisibility(View.VISIBLE);
+//            photoKaUri = intent.getData();
+            Log.d("checkkk", "onActivityResult: " + photoKaUri.toString());
+
         }
 
         if (requestCode == INTENT_REQUEST_GET_IMAGES && resuleCode == RESULT_OK) {
