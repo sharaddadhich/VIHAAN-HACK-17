@@ -104,7 +104,7 @@ public class LostActivity extends AppCompatActivity {
                 // your code here!
                 Log.d("KAIROS DEMO", response);
 
-                Toast.makeText(LostActivity.this,response, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
