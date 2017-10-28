@@ -1,6 +1,7 @@
 package com.example.android.vihaanhack.Activities;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
@@ -20,11 +21,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.android.vihaanhack.R;
+import com.kairos.Kairos;
+import com.kairos.KairosListener;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class FoundActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -37,10 +44,16 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
     Bitmap bitmap;
     MediaRecorder mRecorder;
     MediaPlayer mPlayer;
+    ProgressDialog progressDialog;
     boolean mStartRecording = true;
     CoordinatorLayout coordinatorLayout;
     private static String mFileName = null;
     Uri filepath;
+
+    String app_id = "da94c708";
+    String api_key = "c3b72e509462f155a8e5d2381222bb92";
+    Kairos myKairos;
+    KairosListener listener;
 
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -52,9 +65,37 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
 
 
 
+        progressDialog = new ProgressDialog(this);
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         builder.detectFileUriExposure();
+
+        myKairos = new Kairos();
+
+// set authentication
+
+        myKairos.setAuthentication(this, app_id, api_key);
+
+        // Create an instance of the KairosListener
+
+        listener = new KairosListener() {
+
+            @Override
+            public void onSuccess(String response) {
+                // your code here!
+                Log.d("KAIROS DEMO", response);
+                Toast.makeText(FoundActivity.this, "Recognised!!", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+
+//                Toast.makeText(FoundActivity.this,response, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFail(String response) {
+                // your code here!
+                Log.d("KAIROS DEMO", response);
+            }
+        };
 
         // Record to the external cache directory for visibility
 
@@ -98,10 +139,36 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
         }
         if (view == btnSubmit) {
             if (submitData()){
+                progressDialog.setMessage("Searching ...");
+                progressDialog.show();
+                recognise();
 
 
             }
         }
+    }
+
+    private void recognise() {
+
+        String galleryId = "People";
+        String selector = "FULL";
+        String threshold = "0.75";
+        String minHeadScale = "0.25";
+        String maxNumResults = "25";
+        try {
+            myKairos.recognize(bitmap,
+                    galleryId,
+                    selector,
+                    threshold,
+                    minHeadScale,
+                    maxNumResults,
+                    listener);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private boolean submitData() {

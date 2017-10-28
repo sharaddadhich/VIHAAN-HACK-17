@@ -31,10 +31,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.kairos.Kairos;
+import com.kairos.KairosListener;
 
-
+import org.json.JSONException;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 public class LostActivity extends AppCompatActivity {
@@ -43,6 +46,11 @@ public class LostActivity extends AppCompatActivity {
     EditText lostName, lostAge, lostClothes;
     Bitmap picture;
     Button btnSubmit;
+
+    String app_id = "da94c708";
+    String api_key = "c3b72e509462f155a8e5d2381222bb92";
+    Kairos myKairos;
+    KairosListener listener;
 
     Firebase firebaseRef;
     FirebaseStorage firebaseStorage;
@@ -72,6 +80,31 @@ public class LostActivity extends AppCompatActivity {
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
         progressDialog = new ProgressDialog(this);
+
+        myKairos = new Kairos();
+
+// set authentication
+
+        myKairos.setAuthentication(this, app_id, api_key);
+
+        // Create an instance of the KairosListener
+
+        listener = new KairosListener() {
+
+            @Override
+            public void onSuccess(String response) {
+                // your code here!
+                Log.d("KAIROS DEMO", response);
+
+                Toast.makeText(LostActivity.this,response, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFail(String response) {
+                // your code here!
+                Log.d("KAIROS DEMO", response);
+            }
+        };
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("LOST");
@@ -113,6 +146,7 @@ public class LostActivity extends AppCompatActivity {
 
                     progressDialog.setMessage("Uploading");
                     progressDialog.show();
+                    enrollPeople();
 
                     StorageReference photoref = storageReference.child(String.valueOf(photoKaUri));
                     Log.d("234234", "onClick: " + photoKaUri);
@@ -200,11 +234,11 @@ public class LostActivity extends AppCompatActivity {
         if (resuleCode != RESULT_OK) return;
 
         if (requestCode == REQUEST_CAMERA && resuleCode == RESULT_OK) {
-//            picture = (Bitmap) intent.getExtras().get("data");
-//            image.setImageBitmap(picture);
+            picture = (Bitmap) intent.getExtras().get("data");
+            image.setImageBitmap(picture);
 //            image.setVisibility(View.VISIBLE);
 
-            image.setImageURI(photoKaUri);
+//            image.setImageURI(photoKaUri);
             image.setVisibility(View.VISIBLE);
 //            photoKaUri = intent.getData();
             Log.d("checkkk", "onActivityResult: " + photoKaUri.toString());
@@ -240,5 +274,16 @@ public class LostActivity extends AppCompatActivity {
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+    void enrollPeople(){
+        String subjectId = lostName.getText().toString();
+        String galleryId = "People";
+        try {
+            myKairos.enroll(picture, subjectId, galleryId, null, null, null, listener);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }
