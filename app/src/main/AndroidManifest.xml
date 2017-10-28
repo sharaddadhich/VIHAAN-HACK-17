@@ -26,7 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.FoundActivity" />
+        <activity android:name=".Activities.FoundActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".Activities.LostActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
