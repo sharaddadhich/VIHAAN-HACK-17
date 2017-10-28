@@ -83,7 +83,6 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
             onRecord(mStartRecording);
         }
         if (view == btnSubmit){
-
             submitData();
         }
     }
