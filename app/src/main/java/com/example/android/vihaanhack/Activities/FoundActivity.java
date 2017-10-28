@@ -1,11 +1,16 @@
 package com.example.android.vihaanhack.Activities;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +23,7 @@ import android.widget.ImageView;
 
 import com.example.android.vihaanhack.R;
 
+import java.io.File;
 import java.io.IOException;
 
 public class FoundActivity extends AppCompatActivity implements View.OnClickListener{
@@ -35,17 +41,22 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
     CoordinatorLayout coordinatorLayout;
     private static String mFileName = null;
     Uri filepath;
+    
 
 
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_found);
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
+
         // Record to the external cache directory for visibility
-        mFileName = getExternalCacheDir().getAbsolutePath();
-        mFileName += "/audiorecordtest.3gp";
+
 
         btnMic = (FloatingActionButton) findViewById(R.id.record);
         btnStop=(FloatingActionButton) findViewById(R.id.stop);
@@ -94,7 +105,7 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
             Snackbar snackbar  = Snackbar.make(coordinatorLayout,"Please Enter the Clothes!",Snackbar.LENGTH_LONG);
             snackbar.show();
         }
-        if (bitmap == null){
+        if (filepath == null){
             Snackbar snackbar  = Snackbar.make(coordinatorLayout,"Please Enter the Image!",Snackbar.LENGTH_LONG);
             snackbar.show();
         }
@@ -102,6 +113,11 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
 
     private void openCamera() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        File f = new File(Environment.getExternalStorageDirectory(),"Found"+ts+".jpg");
+        filepath = Uri.fromFile(f);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, filepath);
         startActivityForResult(cameraIntent,CAMERA_REQUEST);
     }
 
@@ -110,11 +126,15 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
 
         Log.d(TAG, "onActivityResult: ");
         if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
-            Log.d(TAG, "onActivityResult: "+data);
-            filepath = data.getData();
-            Log.d(TAG, "onActivityResult: "+data.getExtras().get("data"));
-            bitmap = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(bitmap);
+//            Log.d(TAG, "onActivityResult: "+data);
+//            filepath = data.getData();
+//            Log.d(TAG, "onActivityResult: "+data.getExtras().get("data"));
+//            bitmap = (Bitmap) data.getExtras().get("data");
+//            imageView.setImageBitmap(bitmap);
+            imageView.setImageURI(filepath);
+            imageView.setVisibility(View.VISIBLE);
+//            photoKaUri = intent.getData();
+            Log.d(TAG, "onActivityResult: " + filepath.toString());
             imageView.setVisibility(View.VISIBLE);
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -133,6 +153,10 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
 
     private void startRecording() {
         mRecorder = new MediaRecorder();
+        mFileName = getExternalCacheDir().getAbsolutePath();
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        mFileName += "Found"+ts+".3gp";
         Log.d(TAG, "startRecording: "+mFileName);
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
