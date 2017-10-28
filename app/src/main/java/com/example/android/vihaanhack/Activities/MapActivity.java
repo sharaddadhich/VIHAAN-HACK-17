@@ -12,7 +12,7 @@ import android.util.Log;
 import com.example.android.vihaanhack.Interfaces.OnGetLocation;
 import com.example.android.vihaanhack.R;
 import com.example.android.vihaanhack.Utils.DirectionsJSONParser;
-import com.example.android.vihaanhack.Utils.GPSTracker;
+import com.example.android.vihaanhack.Utils.GPSTracker2;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,7 +39,7 @@ import static com.example.android.vihaanhack.R.id.map;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     SupportMapFragment mapFragment;
-    public static GPSTracker gps;
+    public static GPSTracker2 gps;
     public static Double latitude = null, longitude = null;
     public static OnGetLocation getLocation;
     public static Boolean gpsIsEnabled = false;
@@ -56,14 +56,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         getSupportActionBar().hide();
 
-        gps = new GPSTracker(MapActivity.this);
+        gps = new GPSTracker2(MapActivity.this);
 
         progressDialog = new ProgressDialog(MapActivity.this);
         progressDialog.setMessage("Fetching Location...");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
-        getLoc();
+//        getLoc();
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(map);
@@ -152,7 +152,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         if (requestCode == 9876){
 
-            gps = new GPSTracker(MapActivity.this);
+            gps = new GPSTracker2(MapActivity.this);
 
             if (gps.getIsGPSTrackingEnabled()){
                 gpsIsEnabled = true;

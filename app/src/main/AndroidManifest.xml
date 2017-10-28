@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -51,16 +50,13 @@
 
         <activity android:name=".Activities.MapActivity"></activity>
 
-        <receiver android:name=".MessageRecieverBroadcast"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.READ_SMS">
+        <receiver android:name=".MessageRecieverBroadcast">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".IncomingSms"
+       <receiver android:name=".IncomingSms"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
         <intent-filter>

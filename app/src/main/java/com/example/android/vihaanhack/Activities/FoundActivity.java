@@ -110,6 +110,7 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "onChildAdded: " + lost.getLostName());
                             SmsManager smsManager = SmsManager.getDefault();
                             Log.d(TAG, "onChildAdded: " + lost.getLostMob());
+                            Log.d(TAG, "onChildAdded: "+lost.getLostClothes());
                             smsManager.sendTextMessage(lost.getLostMob(),null,"Found Team Hope",null,null);
 
                         }

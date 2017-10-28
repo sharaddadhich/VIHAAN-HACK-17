@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by ishaandhamija on 31/07/17.
@@ -29,7 +28,6 @@ public class IncomingSms extends BroadcastReceiver {
                 for (int i = 0; i < pdusObj.length; i++) {
 
                     Log.d("hh", "onReceive: " + "aaya");
-                    Toast.makeText(context, "aaya", Toast.LENGTH_SHORT).show();
 
                 }
             }
