@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +34,7 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
     boolean mStartRecording = true;
     CoordinatorLayout coordinatorLayout;
     private static String mFileName = null;
+    Uri filepath;
 
 
 
@@ -106,10 +108,14 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Log.d(TAG, "onActivityResult: ");
         if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
             Log.d(TAG, "onActivityResult: "+data);
+            filepath = data.getData();
+            Log.d(TAG, "onActivityResult: "+data.getExtras().get("data"));
             bitmap = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(bitmap);
+            imageView.setVisibility(View.VISIBLE);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -121,6 +127,7 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
             stopRecording();
         }
     }
+
 
 
 

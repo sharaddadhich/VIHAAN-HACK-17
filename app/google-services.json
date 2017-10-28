@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "579268930079",
+    "firebase_url": "https://vihaanhack.firebaseio.com",
+    "project_id": "vihaanhack",
+    "storage_bucket": "vihaanhack.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579268930079:android:7e6316361dda1ec2",
+        "android_client_info": {
+          "package_name": "com.example.android.vihaanhack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "579268930079-a69lie6f73cpej1hil1anlfh28dvv7tv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.vihaanhack",
+            "certificate_hash": "d24e81a42e129b164468756eef91f67818afa594"
+          }
+        },
+        {
+          "client_id": "579268930079-39fu67j78red8hstvc9hppli8v7jacj5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF5LA2bZWlyIUA43t7bXxQf3ItTUb3cPQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "579268930079-39fu67j78red8hstvc9hppli8v7jacj5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
