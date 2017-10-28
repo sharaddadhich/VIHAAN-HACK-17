@@ -43,13 +43,14 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
     Uri filepath;
 
 
-
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_found);
+
+
+
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -95,20 +96,27 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
             btnStop.setVisibility(View.INVISIBLE);
             onRecord(mStartRecording);
         }
-        if (view == btnSubmit){
-            submitData();
+        if (view == btnSubmit) {
+            if (submitData()){
+
+
+            }
         }
     }
 
-    private void submitData() {
+    private boolean submitData() {
         if (etClothes.getText().toString()==""){
             Snackbar snackbar  = Snackbar.make(coordinatorLayout,"Please Enter the Clothes!",Snackbar.LENGTH_LONG);
             snackbar.show();
+            return false;
         }
         if (filepath == null){
-            Snackbar snackbar  = Snackbar.make(coordinatorLayout,"Please Enter the Image!",Snackbar.LENGTH_LONG);
+            Snackbar snackbar  = Snackbar.make(coordinatorLayout,"Please provide the Image!",Snackbar.LENGTH_LONG);
             snackbar.show();
+            return false;
         }
+
+        return true;
     }
 
     private void openCamera() {
@@ -129,9 +137,10 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
 //            Log.d(TAG, "onActivityResult: "+data);
 //            filepath = data.getData();
 //            Log.d(TAG, "onActivityResult: "+data.getExtras().get("data"));
-//            bitmap = (Bitmap) data.getExtras().get("data");
+            bitmap = (Bitmap) data.getExtras().get("data");
 //            imageView.setImageBitmap(bitmap);
-            imageView.setImageURI(filepath);
+//            imageView.setImageURI(filepath);
+            imageView.setImageBitmap(bitmap);
             imageView.setVisibility(View.VISIBLE);
 //            photoKaUri = intent.getData();
             Log.d(TAG, "onActivityResult: " + filepath.toString());
