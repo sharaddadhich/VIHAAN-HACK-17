@@ -3,6 +3,7 @@ package com.example.android.vihaanhack.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -46,8 +47,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setMessage("Fetching Location...");
-//        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          if (progressDialog.isShowing()) {
+                                              progressDialog.dismiss();
+                                          }
+                                          latitude = 28.7501;
+                                          longitude = 77.1177;
+                                      }
+                                  }, 5000);
 
         getLocation = new OnGetLocation() {
             @Override

@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -47,6 +49,16 @@
 
         <activity android:name=".Activities.MapActivity"></activity>
 
+<<<<<<< HEAD
+=======
+        <receiver android:name=".MessageRecieverBroadcast">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+>>>>>>> 2f15fb2f5904c5f2a0ca08a154f324b10cd0513a
     </application>
+
 
 </manifest>

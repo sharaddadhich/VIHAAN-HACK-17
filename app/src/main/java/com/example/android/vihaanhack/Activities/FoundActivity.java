@@ -16,6 +16,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,11 +24,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.vihaanhack.Models.Lost;
 import com.example.android.vihaanhack.R;
+import com.firebase.client.Firebase;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.kairos.Kairos;
 import com.kairos.KairosListener;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +57,11 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
     boolean mStartRecording = true;
     CoordinatorLayout coordinatorLayout;
     private static String mFileName = null;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+
+
+
     Uri filepath;
 
     String app_id = "da94c708";
@@ -62,8 +76,10 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_found);
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("lost");
 
-
+        Firebase.setAndroidContext(this);
 
         progressDialog = new ProgressDialog(this);
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -81,11 +97,50 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
         listener = new KairosListener() {
 
             @Override
-            public void onSuccess(String response) {
+            public void onSuccess(final String response) {
                 // your code here!
                 Log.d("KAIROS DEMO", response);
-                Toast.makeText(FoundActivity.this, "Recognised!!", Toast.LENGTH_SHORT).show();
+
+
+
                 progressDialog.dismiss();
+
+                databaseReference.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                        Lost lost = dataSnapshot.getValue(Lost.class);
+                        if(response.contains(lost.getLostName()))
+                        {
+                            Log.d(TAG, "onChildAdded: " + lost.getLostName());
+                            SmsManager smsManager = SmsManager.getDefault();
+                            Log.d(TAG, "onChildAdded: " + lost.getLostMob());
+                            smsManager.sendTextMessage(lost.getLostMob(),null,"Found Team Hope",null,null);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
 //                Toast.makeText(FoundActivity.this,response, Toast.LENGTH_SHORT).show();
             }
@@ -178,7 +233,7 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
             snackbar.show();
             return false;
         }
-        if (filepath == null){
+        if (bitmap == null){
             Snackbar snackbar  = Snackbar.make(coordinatorLayout,"Please provide the Image!",Snackbar.LENGTH_LONG);
             snackbar.show();
             return false;
@@ -189,11 +244,11 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
 
     private void openCamera() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        Long tsLong = System.currentTimeMillis()/1000;
-        String ts = tsLong.toString();
-        File f = new File(Environment.getExternalStorageDirectory(),"Found"+ts+".jpg");
-        filepath = Uri.fromFile(f);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, filepath);
+//        Long tsLong = System.currentTimeMillis()/1000;
+//        String ts = tsLong.toString();
+//        File f = new File(Environment.getExternalStorageDirectory(),"Found"+ts+".jpg");
+//        filepath = Uri.fromFile(f);
+//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, filepath);
         startActivityForResult(cameraIntent,CAMERA_REQUEST);
     }
 
@@ -206,12 +261,12 @@ public class FoundActivity extends AppCompatActivity implements View.OnClickList
 //            filepath = data.getData();
 //            Log.d(TAG, "onActivityResult: "+data.getExtras().get("data"));
             bitmap = (Bitmap) data.getExtras().get("data");
-//            imageView.setImageBitmap(bitmap);
-//            imageView.setImageURI(filepath);
             imageView.setImageBitmap(bitmap);
-            imageView.setVisibility(View.VISIBLE);
+//            imageView.setImageURI(filepath);
+  //          imageView.setImageBitmap(bitmap);
+    //        imageView.setVisibility(View.VISIBLE);
 //            photoKaUri = intent.getData();
-            Log.d(TAG, "onActivityResult: " + filepath.toString());
+//            Log.d(TAG, "onActivityResult: " + filepath.toString());
             imageView.setVisibility(View.VISIBLE);
         }
         super.onActivityResult(requestCode, resultCode, data);
